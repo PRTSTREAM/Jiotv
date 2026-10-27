@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: setup-python@v5
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -45,9 +45,6 @@ jobs:
               stream_url = channel.get("stream_url", "")
               cookie = channel.get("cookie", "")
               sportlinks = channel.get("sportlink", [])
-
-              # Agar multikeys (sportlinks) available hain, toh har ek key ke liye ya primary key ke sath process karein
-              # Yahan hum primary key_id:key aur sath me sportlink ki saari keys ko handle kar rahe hain
               
               key_id = channel.get("key_id", "")
               key = channel.get("key", "")
@@ -57,12 +54,8 @@ jobs:
               m3u_lines.append(f"#EXTINF:-1 group-title=\"Sports\" tvg-logo=\"{logo}\",{name}")
               m3u_lines.append("#KODIPROP:inputstream.adaptive.license_type=clearkey")
               
-              # Agar sportlinks list hai, toh unhe comma se join karke ya primary key use karein
-              # Kodi adaptive multi-key format agar supported ho ya primary key set ho:
               if sportlinks:
-                  # Multikeys ko comma-separated ya primary format me dena
                   primary_combo = f"{key_id}:{key}"
-                  # Agar saari keys leni hain toh unka combination bana sakte hain
                   all_keys = ",".join(sportlinks) if sportlinks else primary_combo
                   m3u_lines.append(f"#KODIPROP:inputstream.adaptive.license_key={all_keys}")
               else:
